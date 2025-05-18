@@ -10,7 +10,7 @@ export default function Home() {
   const [showSecurity, setShowSecurity] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4">
+    <div className="min-h-screen bg-white-900 text-black p-4">
       <header className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">👥 PeerChat</h1>
 
