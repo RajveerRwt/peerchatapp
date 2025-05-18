@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import { motion } from "framer-motion";
 
-const socket = io("http://localhost:5015");
+const socket = io("https://peerchatapp.onrender.com");
 
 export default function ChatApp() {
   const [connected, setConnected] = useState(false);
