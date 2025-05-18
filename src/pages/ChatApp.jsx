@@ -125,7 +125,7 @@ export default function ChatApp() {
           </label>
           <button
             onClick={handleStart}
-            className={`w-full py-2 rounded text-black ${
+            className={`w-full py-2 rounded text-white ${
               agree
                 ? "bg-blue-500 hover:bg-blue-600"
                 : "bg-gray-600 cursor-not-allowed"

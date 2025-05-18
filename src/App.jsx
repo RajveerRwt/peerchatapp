@@ -18,7 +18,7 @@ export default function Home() {
        
         <button
           onClick={() => setShowMenu(!showMenu)}
-          className="text-black text-3xl md:hidden"
+          className="text-white text-3xl md:hidden"
         >
           ☰
         </button>
@@ -32,25 +32,25 @@ export default function Home() {
       >
         <button
           onClick={() => setShowAbout(!showAbout)}
-          className="bg-blue-600 hover:bg-blue-700 text-black px-4 py-2 rounded"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
         >
           What is PeerChat?
         </button>
         <button
           onClick={() => setShowGuidelines(!showGuidelines)}
-          className="bg-green-600 hover:bg-green-700 text-black px-4 py-2 rounded"
+          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
         >
           Guidelines
         </button>
         <button
           onClick={() => setShowSecurity(!showSecurity)}
-          className="bg-purple-600 hover:bg-purple-700 text-black px-4 py-2 rounded"
+          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded"
         >
           Security & Anonymity
         </button>
         <button
           onClick={() => setShowContactForm(true)}
-          className="bg-yellow-600 hover:bg-yellow-700 text-black px-4 py-2 rounded"
+          className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded"
         >
           💬 Send Feedback
         </button>
