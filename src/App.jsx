@@ -10,7 +10,7 @@ export default function Home() {
   const [showSecurity, setShowSecurity] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white-900 text-black p-4">
+    <div className="min-h-screen bg-white text-grey-900 p-4">
       <header className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">👥 PeerChat</h1>
 
@@ -18,7 +18,7 @@ export default function Home() {
        
         <button
           onClick={() => setShowMenu(!showMenu)}
-          className="text-white text-3xl md:hidden"
+          className="text-white bg-gery text-3xl md:hidden"
         >
           ☰
         </button>
