@@ -1,3 +1,7 @@
+import React, { useState } from "react";
+import ContactForm from "./pages/ContactForm";
+import ChatApp from "./pages/ChatApp";
+
 export default function Home() {
   const [showMenu, setShowMenu] = useState(false);
   const [showContactForm, setShowContactForm] = useState(false);
@@ -6,13 +10,15 @@ export default function Home() {
   const [showSecurity, setShowSecurity] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 p-4">
+    <div className="min-h-screen bg-white text-grey-900 p-4">
       <header className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">👥 PeerChat</h1>
 
+        
+       
         <button
           onClick={() => setShowMenu(!showMenu)}
-          className="text-gray-900 bg-gray-200 px-3 py-1 rounded md:hidden"
+          className="text-white bg-gery text-3xl md:hidden"
         >
           ☰
         </button>
@@ -26,25 +32,25 @@ export default function Home() {
       >
         <button
           onClick={() => setShowAbout(!showAbout)}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
         >
           What is PeerChat?
         </button>
         <button
           onClick={() => setShowGuidelines(!showGuidelines)}
-          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
         >
           Guidelines
         </button>
         <button
           onClick={() => setShowSecurity(!showSecurity)}
-          className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded"
+          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded"
         >
           Security & Anonymity
         </button>
         <button
           onClick={() => setShowContactForm(true)}
-          className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-4 py-2 rounded"
+          className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded"
         >
           💬 Send Feedback
         </button>
@@ -55,7 +61,7 @@ export default function Home() {
         <Section
           title="🧠 What is PeerChat?"
           content={[
-            "PeerChat is an anonymous chat platform for students of different colleges and universities to connect freely, share knowledge, and find study partners or discuss ideas.",
+            "PeerChat is an anonymous chat platform for students of different  colleges and universities to connect freely, share knowledge, and find study partners or discuss ideas.",
           ]}
         />
       )}
@@ -88,6 +94,28 @@ export default function Home() {
 
       {/* Chat Component */}
       <ChatApp />
+      
+    </div>
+  );
+}
+
+// Helper section renderer
+function Section({ title, content = [], list = [] }) {
+  return (
+    <div className="bg-gray-800 p-4 rounded-lg mb-4">
+      <h2 className="text-xl font-semibold mb-2">{title}</h2>
+      {content.map((p, i) => (
+        <p key={i} className="mb-2 text-sm text-gray-300">
+          {p}
+        </p>
+      ))}
+      {list.length > 0 && (
+        <ul className="list-disc list-inside text-sm text-gray-300">
+          {list.map((item, i) => (
+            <li key={i}>{item}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
