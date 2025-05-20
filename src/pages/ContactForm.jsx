@@ -12,7 +12,7 @@ export default function ContactForm({ onClose }) {
         </p>
         <button
           onClick={onClose}
-          className="mt-4 bg-gray-800 text-black px-4 py-2 rounded hover:bg-gray-700"
+          className="mt-4 bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700"
         >
           Close
         </button>
@@ -25,7 +25,7 @@ export default function ContactForm({ onClose }) {
       onSubmit={handleSubmit}
       className="max-w-md mx-auto bg-gray-800 p-6 rounded-lg shadow-lg mt-10"
     >
-      <h2 className="text-2xl text-white font-bold mb-4 text-center">
+      <h2 className="text-2xl text-black font-bold mb-4 text-center">
         💬 Feedback / Suggestions
       </h2>
 

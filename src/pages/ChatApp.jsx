@@ -106,7 +106,7 @@ export default function ChatApp() {
           animate={{ opacity: 1, scale: 1 }}
         >
           <h2 className="text-xl font-bold mb-4 text-center">🎓 Peer Chat</h2>
-          
+
           <input
             type="text"
             placeholder="Enter your name"
@@ -125,7 +125,7 @@ export default function ChatApp() {
           </label>
           <button
             onClick={handleStart}
-            className={`w-full py-2 rounded text-white ${
+            className={`w-full py-2 rounded  text-pink-500 ${
               agree
                 ? "bg-blue-500 hover:bg-blue-600"
                 : "bg-gray-600 cursor-not-allowed"
@@ -144,18 +144,17 @@ export default function ChatApp() {
           <p className="text-lg">Searching for a peer...</p>
         </div>
       ) : (
-        <div className="bg-gray-900 w-full max-w-md rounded-lg p-4 shadow-md flex flex-col">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-sm font-semibold">Chatting with: {partnerName}</h2>
-            <button
-              onClick={handleSkip}
-              className="text-xs text-red-400 hover:underline"
-            >
-              Skip
-            </button>
+        <div className="bg-gray-900 w-full h-[95vh] max-w-md rounded-lg p-4 shadow-md flex flex-col">
+          {/* Partner's Name */}
+          <div className="text-center mb-2">
+            <h2 className="text-lg font-bold  bg-yellow-200 text-red-900">
+              Chatting with:   <div> {partnerName}</div>
+            </h2>
+            <div className="text-lg border-2-solid-blue rounded-mid bg-green-500 text-red-900"> <p>end to end  encrypted chats</p></div>
           </div>
 
-          <div className="flex-1 overflow-y-auto h-80 space-y-2 mb-4 pr-2">
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto space-y-2 mb-4 pr-2">
             {messages.map((msg, i) => (
               <div
                 key={i}
@@ -176,6 +175,7 @@ export default function ChatApp() {
             )}
           </div>
 
+          {/* Input and Buttons */}
           <div className="flex items-center gap-2">
             <input
               className="flex-1 px-3 py-2 rounded bg-gray-700 text-sm"
@@ -186,9 +186,15 @@ export default function ChatApp() {
             />
             <button
               onClick={sendMessage}
-              className="bg-white text-black px-4 py-2 rounded"
+              className="bg-white text-pink-700 px-4 py-2 rounded front-semibold"
             >
               Send
+            </button>
+            <button
+              onClick={handleSkip}
+              className="bg-red text-pink-700 px-4 py-2 rounded text-sm hover:bg-red-600"
+            >
+              Skip
             </button>
           </div>
         </div>

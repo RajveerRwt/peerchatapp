@@ -3,70 +3,70 @@ import ContactForm from "./pages/ContactForm";
 import ChatApp from "./pages/ChatApp";
 
 export default function Home() {
+  const [activeSection, setActiveSection] = useState("");
   const [showMenu, setShowMenu] = useState(false);
-  const [showContactForm, setShowContactForm] = useState(false);
-  const [showAbout, setShowAbout] = useState(false);
-  const [showGuidelines, setShowGuidelines] = useState(false);
-  const [showSecurity, setShowSecurity] = useState(false);
+
+  const handleToggle = (section) => {
+    setActiveSection((prev) => (prev === section ? "" : section));
+    setShowMenu(false); // Close menu after selection on mobile
+  };
 
   return (
-    <div className="min-h-screen bg-white text-grey-900 p-4">
+    <div className="min-h-screen bg-yellow-500 text-gray-900 p-4">
       <header className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">👥 PeerChat</h1>
-
-        
-       
+        <h1 className="text-2xl  font-bold">👥 PeerChat</h1>
+      
         <button
+          aria-expanded={showMenu}
+          aria-controls="main-menu"
           onClick={() => setShowMenu(!showMenu)}
-          className="text-white bg-gery text-3xl md:hidden"
+          className="text-black bg-green-800   text-3xl px-2 rounded md:hidden"
         >
           ☰
         </button>
       </header>
 
-      {/* Hamburger Menu Options */}
+      {/* Menu */}
       <nav
-        className={`md:flex flex-col md:flex-row gap-4 mb-6 ${
-          showMenu ? "block" : "hidden"
-        } md:block`}
+        id="main-menu"
+        className={`md:flex flex-col md:flex-row gap-4 mb-6 ${showMenu ? "block" : "hidden"} md:block`}
       >
         <button
-          onClick={() => setShowAbout(!showAbout)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          onClick={() => handleToggle("about")}
+          className="bg-blue-600 hover:bg-blue-700 text-black px-4 py-2 rounded"
         >
           What is PeerChat?
         </button>
         <button
-          onClick={() => setShowGuidelines(!showGuidelines)}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+          onClick={() => handleToggle("guidelines")}
+          className="bg-green-600 hover:bg-green-700 text-black px-4 py-2 rounded"
         >
           Guidelines
         </button>
         <button
-          onClick={() => setShowSecurity(!showSecurity)}
-          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded"
+          onClick={() => handleToggle("security")}
+          className="bg-purple-600 hover:bg-purple-700 text-black px-4 py-2 rounded"
         >
           Security & Anonymity
         </button>
         <button
-          onClick={() => setShowContactForm(true)}
-          className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded"
+          onClick={() => handleToggle("contact")}
+          className="bg-yellow-600 hover:bg-yellow-700 text-black px-4 py-2 rounded"
         >
           💬 Send Feedback
         </button>
       </nav>
 
-      {/* Sections */}
-      {showAbout && (
+      {/* Section Rendering */}
+      {activeSection === "about" && (
         <Section
           title="🧠 What is PeerChat?"
           content={[
-            "PeerChat is an anonymous chat platform for students of different  colleges and universities to connect freely, share knowledge, and find study partners or discuss ideas.",
+            "PeerChat is an anonymous chat platform for students of different colleges and universities to connect freely, share knowledge, and find study partners or discuss ideas.",
           ]}
         />
       )}
-
-      {showGuidelines && (
+      {activeSection === "guidelines" && (
         <Section
           title="📜 Community Guidelines"
           list={[
@@ -78,8 +78,7 @@ export default function Home() {
           ]}
         />
       )}
-
-      {showSecurity && (
+      {activeSection === "security" && (
         <Section
           title="🔐 Security & Anonymity"
           content={[
@@ -87,22 +86,19 @@ export default function Home() {
           ]}
         />
       )}
-
-      {showContactForm && (
-        <ContactForm onClose={() => setShowContactForm(false)} />
+      {activeSection === "contact" && (
+        <ContactForm onClose={() => setActiveSection("")} />
       )}
 
-      {/* Chat Component */}
+      {/* Chat */}
       <ChatApp />
-      
     </div>
   );
 }
 
-// Helper section renderer
 function Section({ title, content = [], list = [] }) {
   return (
-    <div className="bg-gray-800 p-4 rounded-lg mb-4">
+    <div className="bg-gray-800 p-4 rounded-lg mb-4 transition-all duration-300 ease-in-out text-white">
       <h2 className="text-xl font-semibold mb-2">{title}</h2>
       {content.map((p, i) => (
         <p key={i} className="mb-2 text-sm text-gray-300">
@@ -116,6 +112,7 @@ function Section({ title, content = [], list = [] }) {
           ))}
         </ul>
       )}
+      
     </div>
   );
 }
