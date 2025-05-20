@@ -13,6 +13,7 @@ export default function ChatApp() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isPartnerTyping, setIsPartnerTyping] = useState(false);
+  const [liveCount, setLiveCount] = useState(0);
 
   useEffect(() => {
     socket.on("paired", ({ partnerName }) => {
@@ -46,6 +47,10 @@ export default function ChatApp() {
       setIsPartnerTyping(false);
     });
 
+    socket.on("liveCount", (count) => {
+      setLiveCount(count);
+    });
+
     return () => {
       socket.off("paired");
       socket.off("waiting");
@@ -53,15 +58,9 @@ export default function ChatApp() {
       socket.off("partnerDisconnected");
       socket.off("typing");
       socket.off("stopTyping");
+      socket.off("liveCount");
     };
   }, []);
-
-  useEffect(() => {
-    const chatDiv = document.getElementById("chat-window");
-    if (chatDiv) {
-      chatDiv.scrollTop = chatDiv.scrollHeight;
-    }
-  }, [messages]);
 
   const handleStart = () => {
     if (!username.trim()) return alert("Please enter your name");
@@ -99,7 +98,7 @@ export default function ChatApp() {
   };
 
   return (
-    <div className="w-screen h-screen bg-gradient-to-br from-black to-blue-900 text-white flex items-center justify-center overflow-hidden">
+    <div className=" w-screen h-screen flex items-center justify-center bg-gradient-to-br from-black to-blue-900 p-4 text-white overflow-hidden">
       {!connected ? (
         <motion.div
           className="bg-gray-800 w-full max-w-sm p-6 rounded-lg shadow-md"
@@ -126,7 +125,7 @@ export default function ChatApp() {
           </label>
           <button
             onClick={handleStart}
-            className={`w-full py-2 rounded text-pink-800 ${
+            className={`w-full py-2 rounded  text-pink-500 ${
               agree
                 ? "bg-blue-500 hover:bg-blue-600"
                 : "bg-gray-600 cursor-not-allowed"
@@ -145,18 +144,17 @@ export default function ChatApp() {
           <p className="text-lg">Searching for a peer...</p>
         </div>
       ) : (
-        <div className="bg-gray-900 w-full max-w-md h-full rounded-lg p-4 shadow-md flex flex-col">
+        <div className="bg-gray-900 w-full h-[95vh] max-w-md rounded-lg p-4 shadow-md flex flex-col">
+          {/* Partner's Name */}
           <div className="text-center mb-2">
-            <h2 className="text-lg font-bold italic text-blue-300">
-              Chatting with: {partnerName}
-              
+            <h2 className="text-lg font-bold  bg-yellow-200 text-red-900">
+              Chatting with:   <div> {partnerName}</div>
             </h2>
+            <div className="text-lg border-2-solid-blue rounded-mid bg-green-500 text-red-900"> <p>end to end  encrypted chats</p></div>
           </div>
 
-          <div
-            id="chat-window"
-            className="flex-1 overflow-y-auto space-y-2 mb-4 pr-2"
-          >
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto space-y-2 mb-4 pr-2">
             {messages.map((msg, i) => (
               <div
                 key={i}
@@ -177,6 +175,7 @@ export default function ChatApp() {
             )}
           </div>
 
+          {/* Input and Buttons */}
           <div className="flex items-center gap-2">
             <input
               className="flex-1 px-3 py-2 rounded bg-gray-700 text-sm"
@@ -187,13 +186,13 @@ export default function ChatApp() {
             />
             <button
               onClick={sendMessage}
-              className="bg-white text-pink-800 px-4 py-2 rounded text-sm font-medium"
+              className="bg-white text-pink-700 px-4 py-2 rounded front-semibold"
             >
               Send
             </button>
             <button
               onClick={handleSkip}
-              className="bg-red-500 hover:bg-red-600 text-pink-800 px-3 py-2 rounded text-sm"
+              className="bg-red text-pink-700 px-4 py-2 rounded text-sm hover:bg-red-600"
             >
               Skip
             </button>
