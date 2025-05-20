@@ -14,7 +14,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-yellow-500 text-gray p-4">
       <header className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl  font-bold">👥 PeerChat</h1>
+        <h1 className="text-2xl  font-bold">
+          <img src="public/peerlogo.png" alt="logo" className="h-8 w-8"/> PeerChat</h1>
       
         <button
           aria-expanded={showMenu}
