@@ -34,25 +34,25 @@ export default function Home() {
       >
         <button
           onClick={() => handleToggle("about")}
-          className="bg-grey hover:bg-blue-700 text-pink-800 px-3 py-1 rounded w-64 mb-4 md:mb-0"
+          className="bg-grey hover:bg-blue-700 text-pink-800 px-3 py-1 rounded"
         >
           PeerChat ?
         </button>
         <button
           onClick={() => handleToggle("guidelines")}
-          className="bg-green-600 hover:bg-green-700 text-pink-800 px-4 py-2 rounded w-64 mb-4 md:mb-0 "
+          className="bg-green-600 hover:bg-green-700 text-pink-800 px-4 py-2 rounded  "
         >
           Guidelines
         </button>
         <button
           onClick={() => handleToggle("security")}
-          className="bg-purple-600 hover:bg-purple-700 text-pink-800 px-4 py-2 rounded w-64 mb-4 md:mb-0 "
+          className="bg-purple-600 hover:bg-purple-700 text-pink-800 px-4 py-2 rounded "
         >
           Security & Anonymity
         </button>
         <button
           onClick={() => handleToggle("contact")}
-          className="bg-yellow-600 hover:bg-yellow-700 text-pink-800 px-4 py-2 round w-64 mb-4 md:mb-0ed "
+          className="bg-yellow-600 hover:bg-yellow-700 text-pink-800 px-4 py-2 round"
         >
           💬 Send Feedback
         </button>
