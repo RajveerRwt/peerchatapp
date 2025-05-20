@@ -12,7 +12,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-yellow-500 text-gray-900 p-4">
+    <div className="min-h-screen bg-yellow-500 text-gray p-4">
       <header className="flex justify-between items-center mb-6">
         <h1 className="text-2xl  font-bold">👥 PeerChat</h1>
       
@@ -20,7 +20,7 @@ export default function Home() {
           aria-expanded={showMenu}
           aria-controls="main-menu"
           onClick={() => setShowMenu(!showMenu)}
-          className="text-black bg-green-800   text-3xl px-2 rounded md:hidden"
+          className="text-pink-800 bg-red-500   text-3xl px-2 py-2 rounded md:hidden"
         >
           ☰
         </button>
@@ -33,25 +33,25 @@ export default function Home() {
       >
         <button
           onClick={() => handleToggle("about")}
-          className="bg-blue-600 hover:bg-blue-700 text-black px-4 py-2 rounded"
+          className="bg-grey hover:bg-blue-700 text-pink-800 px-4 py-2 rounded"
         >
-          What is PeerChat?
+          PeerChat ?
         </button>
         <button
           onClick={() => handleToggle("guidelines")}
-          className="bg-green-600 hover:bg-green-700 text-black px-4 py-2 rounded"
+          className="bg-green-600 hover:bg-green-700 text-pink-800 px-4 py-2 rounded"
         >
           Guidelines
         </button>
         <button
           onClick={() => handleToggle("security")}
-          className="bg-purple-600 hover:bg-purple-700 text-black px-4 py-2 rounded"
+          className="bg-purple-600 hover:bg-purple-700 text-pink-800 px-4 py-2 rounded"
         >
           Security & Anonymity
         </button>
         <button
           onClick={() => handleToggle("contact")}
-          className="bg-yellow-600 hover:bg-yellow-700 text-black px-4 py-2 rounded"
+          className="bg-yellow-600 hover:bg-yellow-700 text-pink-800 px-4 py-2 rounded"
         >
           💬 Send Feedback
         </button>
