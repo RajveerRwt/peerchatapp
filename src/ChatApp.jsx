@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import { motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
+
 
 const socket = io("https://peerchatapp.onrender.com");
 
@@ -178,27 +180,42 @@ export default function ChatApp({ onBack }) {
           </div>
 
           {/* Input section fixed at bottom */}
-          <div className="p-3 bg-gray-900 flex gap-2">
-            <input
-              className="flex-1 px-3 py-2 rounded bg-gray-700 text-sm"
-              placeholder="Type a message..."
-              value={input}
-              onChange={handleTyping}
-              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-            />
-            <button
-              onClick={sendMessage}
-              className="bg-white text-pink-800 px-4 py-2 rounded"
-            >
-              Send
-            </button>
-            <button
-              onClick={handleSkip}
-              className="bg-red-600 text-pink-800 px-4 py-2 rounded"
-            >
-              Skip
-            </button>
-          </div>
+          <div className="p-2 flex gap-2 items-center w-full">
+  <input
+    className="flex-1 px-3 py-2 rounded bg-gray-700 text-sm outline-none"
+    placeholder="Type a message..."
+    value={input}
+    onChange={handleTyping}
+    onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+  />
+
+  <AnimatePresence mode="wait">
+    {input.trim() ? (
+      <motion.button
+        key="send"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.8 }}
+        onClick={sendMessage}
+        className="bg-white text-pink-900 px-3 py-2 rounded whitespace-nowrap"
+      >
+        Send
+      </motion.button>
+    ) : (
+      <motion.button
+        key="skip"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.8 }}
+        onClick={handleSkip}
+        className="bg-red-600 text-pink-900 px-3 py-2 rounded whitespace-nowrap"
+      >
+        Skip
+      </motion.button>
+    )}
+  </AnimatePresence>
+</div>
+
         </>
       )}
     </div>
