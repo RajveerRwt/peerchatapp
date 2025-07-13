@@ -76,7 +76,7 @@ export default function CreatePost({ onPostCreated }) {
       <button
         type="submit"
         disabled={loading}
-        className="mt-3 bg-pink-600 hover:bg-pink-700 text-white py-1 px-4 rounded"
+        className="mt-3 bg-black-600 hover:bg-black-700 text-pink-700 py-1 px-4 rounded"
       >
         {loading ? "Posting..." : "Post Anonymously"}
       </button>

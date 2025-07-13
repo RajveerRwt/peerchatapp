@@ -114,7 +114,7 @@ export default function UploadOpportunity() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700"
+          className="w-full bg-indigo-600 text-pink-700 py-2 rounded hover:bg-indigo-700"
         >
           {loading ? "Uploading..." : "Upload Opportunity"}
         </button>
