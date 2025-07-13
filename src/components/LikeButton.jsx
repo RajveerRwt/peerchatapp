@@ -21,22 +21,28 @@ export default function LikeButton({ confessionId }) {
   }, []);
 
   const checkLiked = async () => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("likes")
       .select("*")
       .eq("confession_id", confessionId)
       .eq("user_ip", userId);
 
-    setLiked(data.length > 0);
+    if (!error && data) {
+      setLiked(data.length > 0);
+    } else {
+      setLiked(false); // fallback
+    }
   };
 
   const fetchCount = async () => {
-    const { count } = await supabase
+    const { count, error } = await supabase
       .from("likes")
       .select("*", { count: "exact", head: true })
       .eq("confession_id", confessionId);
 
-    setCount(count || 0);
+    if (!error) {
+      setCount(count || 0);
+    }
   };
 
   const toggleLike = async () => {
@@ -46,11 +52,14 @@ export default function LikeButton({ confessionId }) {
         .delete()
         .eq("confession_id", confessionId)
         .eq("user_ip", userId);
+      setLiked(false);
     } else {
-      await supabase.from("likes").insert([{ confession_id: confessionId, user_ip: userId }]);
+      await supabase
+        .from("likes")
+        .insert([{ confession_id: confessionId, user_ip: userId }]);
+      setLiked(true);
     }
 
-    setLiked(!liked);
     fetchCount();
   };
 

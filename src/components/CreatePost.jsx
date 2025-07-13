@@ -4,6 +4,7 @@ import { supabase } from "../supabaseClient";
 
 export default function CreatePost({ onPostCreated }) {
   const [text, setText] = useState("");
+  const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -12,12 +13,34 @@ export default function CreatePost({ onPostCreated }) {
     if (!text.trim()) return;
 
     setLoading(true);
+    let imageUrl = null;
+
+    if (image) {
+      const fileName = `${Date.now()}-${image.name}`;
+      const { data, error: uploadError } = await supabase.storage
+        .from("confession-images") // make sure this bucket exists
+        .upload(`confessions/${fileName}`, image);
+
+      if (uploadError) {
+        setMessage("Image upload failed");
+        setLoading(false);
+        return;
+      }
+
+      const { data: urlData } = supabase.storage
+        .from("confession-images")
+        .getPublicUrl(`confessions/${fileName}`);
+
+      imageUrl = urlData.publicUrl;
+    }
+
     const username = "Anonymous" + Math.floor(Math.random() * 1000);
 
     const { error } = await supabase.from("confessions").insert([
       {
         text,
         username,
+        image_url: imageUrl,
       },
     ]);
 
@@ -26,6 +49,7 @@ export default function CreatePost({ onPostCreated }) {
       setMessage("Failed to post 😢");
     } else {
       setText("");
+      setImage(null);
       setMessage("Posted successfully 🎉");
       onPostCreated?.();
     }
@@ -41,14 +65,23 @@ export default function CreatePost({ onPostCreated }) {
         rows={3}
         required
       />
+
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => setImage(e.target.files[0])}
+        className="mt-2 block text-sm text-gray-500"
+      />
+
       <button
         type="submit"
         disabled={loading}
-        className="mt-2 bg-black-600 hover:bg-pink-700 text-white py-1 px-4 rounded"
+        className="mt-3 bg-pink-600 hover:bg-pink-700 text-white py-1 px-4 rounded"
       >
         {loading ? "Posting..." : "Post Anonymously"}
       </button>
-      <p className="text-sm text-green-600 mt-1">{message}</p>
+
+      <p className="text-sm text-green-600 mt-2">{message}</p>
     </form>
   );
 }
