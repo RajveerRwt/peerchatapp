@@ -56,15 +56,20 @@ io.on("connection", (socket) => {
     socket.emit("waiting");
   });
 
-  socket.on("chatMessage", ({ text }) => {
-    const partnerId = pairs[socket.id];
-    if (partnerId && io.sockets.sockets.get(partnerId)) {
-      io.to(partnerId).emit("chatMessage", {
-        sender: userData[socket.id]?.username || "Anonymous",
-        text,
-      });
-    }
-  });
+  // Assuming you already have this structure
+socket.on("chatMessage", ({ text, file, filename }) => {
+  const partnerId = pairs[socket.id];
+
+  if (partnerId && io.sockets.sockets.get(partnerId)) {
+    io.to(partnerId).emit("chatMessage", {
+      sender: "Partner",
+      text: text || null,
+      file: file || null,
+      filename: filename || null,
+    });
+  }
+});
+
 
   socket.on("skip", () => {
     const partnerId = pairs[socket.id];

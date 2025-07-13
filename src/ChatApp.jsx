@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
-import { motion } from "framer-motion";
-import { AnimatePresence } from "framer-motion";
-
+import { motion, AnimatePresence } from "framer-motion";
 
 const socket = io("https://peerchatapp.onrender.com");
 
@@ -25,10 +23,16 @@ export default function ChatApp({ onBack }) {
 
     socket.on("waiting", () => console.log("Waiting for partner..."));
 
-    socket.on("chatMessage", ({ sender, text }) => {
+    socket.on("chatMessage", ({ sender, text, file, filename }) => {
       setMessages((prev) => [
         ...prev,
-        { sender, text, time: new Date().toLocaleTimeString() },
+        {
+          sender,
+          text,
+          file,
+          filename,
+          time: new Date().toLocaleTimeString(),
+        },
       ]);
     });
 
@@ -53,7 +57,6 @@ export default function ChatApp({ onBack }) {
   }, []);
 
   useEffect(() => {
-    // Scroll to bottom when new messages arrive
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isPartnerTyping]);
 
@@ -69,7 +72,11 @@ export default function ChatApp({ onBack }) {
       socket.emit("chatMessage", { text: input });
       setMessages((prev) => [
         ...prev,
-        { sender: "You", text: input, time: new Date().toLocaleTimeString() },
+        {
+          sender: "You",
+          text: input,
+          time: new Date().toLocaleTimeString(),
+        },
       ]);
       setInput("");
       socket.emit("stopTyping");
@@ -90,6 +97,30 @@ export default function ChatApp({ onBack }) {
     setPaired(false);
     setMessages([]);
     setIsPartnerTyping(false);
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result;
+      socket.emit("chatMessage", {
+        file: base64,
+        filename: file.name,
+        text: null,
+      });
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: "You",
+          file: base64,
+          filename: file.name,
+          time: new Date().toLocaleTimeString(),
+        },
+      ]);
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -166,7 +197,16 @@ export default function ChatApp({ onBack }) {
                     msg.sender === "You" ? "bg-blue-600" : "bg-gray-700"
                   }`}
                 >
-                  <p>{msg.text}</p>
+                  {msg.text && <p>{msg.text}</p>}
+                  {msg.file && (
+                    <a
+                      href={msg.file}
+                      download={msg.filename}
+                      className="text-blue-200 underline text-sm"
+                    >
+                      📎 {msg.filename}
+                    </a>
+                  )}
                   <p className="text-[10px] text-gray-300 mt-1 text-right">
                     {msg.time}
                   </p>
@@ -179,43 +219,55 @@ export default function ChatApp({ onBack }) {
             <div ref={messageEndRef} />
           </div>
 
-          {/* Input section fixed at bottom */}
-          <div className="p-2 flex gap-2 items-center w-full">
-  <input
-    className="flex-1 px-3 py-2 rounded bg-gray-700 text-sm outline-none"
-    placeholder="Type a message..."
-    value={input}
-    onChange={handleTyping}
-    onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-  />
+          {/* Input section */}
+          <div className="p-2 flex flex-wrap gap-2 items-center w-full">
+            <input
+              className="flex-1 px-3 py-2 rounded bg-gray-700 text-sm outline-none"
+              placeholder="Type a message..."
+              value={input}
+              onChange={handleTyping}
+              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+            />
 
-  <AnimatePresence mode="wait">
-    {input.trim() ? (
-      <motion.button
-        key="send"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.8 }}
-        onClick={sendMessage}
-        className="bg-white text-pink-900 px-3 py-2 rounded whitespace-nowrap"
-      >
-        Send
-      </motion.button>
-    ) : (
-      <motion.button
-        key="skip"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.8 }}
-        onClick={handleSkip}
-        className="bg-red-600 text-pink-900 px-3 py-2 rounded whitespace-nowrap"
-      >
-        Skip
-      </motion.button>
-    )}
-  </AnimatePresence>
-</div>
+            <input
+              type="file"
+              onChange={handleFileChange}
+              className="hidden"
+              id="file-upload"
+            />
+            <label
+              htmlFor="file-upload"
+              className="cursor-pointer bg-yellow-500 text-black px-3 py-2 rounded text-sm"
+            >
+              📎 File
+            </label>
 
+            <AnimatePresence mode="wait">
+              {input.trim() ? (
+                <motion.button
+                  key="send"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  onClick={sendMessage}
+                  className="bg-white text-pink-900 px-3 py-2 rounded whitespace-nowrap"
+                >
+                  Send
+                </motion.button>
+              ) : (
+                <motion.button
+                  key="skip"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  onClick={handleSkip}
+                  className="bg-red-600 text-pink-900 px-3 py-2 rounded whitespace-nowrap"
+                >
+                  Skip
+                </motion.button>
+              )}
+            </AnimatePresence>
+          </div>
         </>
       )}
     </div>
