@@ -26,7 +26,7 @@ export default function MaterialsList() {
 
   return (
     <div className="p-4 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">📚 Study Materials</h1>
+      <h1 className="text-2xl font-bold mb-4  text-blue-600">📚 Study Materials</h1>
       {loading ? (
         <p>Loading...</p>
       ) : materials.length === 0 ? (

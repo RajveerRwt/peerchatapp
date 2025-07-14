@@ -43,8 +43,8 @@ export default function App() {
       <div className="max-w-screen-lg mx-auto">
   {/* Header code here */
   <header className="bg-white shadow p-3 flex items-center gap-2">
-  <img src="STULOGO.jpeg" alt="PeerChat Logo" className="w-8 h-8" />
-  <h1 className="text-xl font-bold text-BLUE-600">PEERCHAT</h1>
+  <img src="peerlogo.png" alt="PeerChat Logo" className="w-8 h-8" />
+  <h1 className="text-xl font-bold text-green-500">PEERCHAT</h1>
 </header>
 }
 </div>
@@ -55,7 +55,7 @@ export default function App() {
             <button
               onClick={() => setActiveFeed("confession")}
               className={`px-4 py-1 rounded-full ${
-                activeFeed === "confession" ? "bg-pink-600 text-blue-700" : "bg-white border"
+                activeFeed === "confession" ? "bg-pink-600 text-green-900" : "bg-white border"
               }`}
             >
               🗣 Confessions/memes
@@ -63,7 +63,7 @@ export default function App() {
             <button
               onClick={() => setActiveFeed("opportunity")}
               className={`px-4 py-1 rounded-full ${
-                activeFeed === "opportunity" ? "bg-indigo-600 text-yellow-700" : "bg-white border"
+                activeFeed === "opportunity" ? "bg-indigo-600 text-green-900" : "bg-white border"
               }`}
             >
               🎯 Opportunities

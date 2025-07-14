@@ -78,7 +78,7 @@ export default function UploadOpportunity() {
   }
 
   return (
-    <div className="max-w-lg mx-auto mt-8 bg-white shadow rounded p-5">
+    <div className="max-w-lg mx-auto mt-8 bg-pink-200 shadow rounded p-5">
       <h2 className="text-xl font-bold text-center mb-4 text-indigo-800">📤 Upload Opportunity</h2>
       <form onSubmit={handleSubmit} className="space-y-3">
         <input

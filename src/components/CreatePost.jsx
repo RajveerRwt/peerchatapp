@@ -56,7 +56,7 @@ export default function CreatePost({ onPostCreated }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow mb-4 max-w-2xl mx-auto">
+    <form onSubmit={handleSubmit} className="bg-pink-200 p-4 rounded shadow mb-4 max-w-2xl mx-auto">
       <textarea
         placeholder="Write your confession or meme..."
         value={text}
