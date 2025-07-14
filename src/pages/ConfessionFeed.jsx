@@ -30,7 +30,7 @@ export default function ConfessionFeed() {
   return (
     <div className="p-4 max-w-2xl mx-auto space-y-6">
       <h2 className="text-2xl font-bold text-center text-pink-700 mb-4">
-        🎭 Anonymous Confessions
+        🎭 Memes/Anonymous Confessions/notices
       </h2>
 
       {loading ? (

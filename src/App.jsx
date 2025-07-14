@@ -58,7 +58,7 @@ export default function App() {
                 activeFeed === "confession" ? "bg-pink-600 text-blue-700" : "bg-white border"
               }`}
             >
-              🗣 Confessions
+              🗣 Confessions/memes
             </button>
             <button
               onClick={() => setActiveFeed("opportunity")}
