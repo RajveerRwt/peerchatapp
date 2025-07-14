@@ -44,7 +44,7 @@ export default function App() {
   {/* Header code here */
   <header className="bg-white shadow p-3 flex items-center gap-2">
   <img src="STULOGO.jpeg" alt="PeerChat Logo" className="w-8 h-8" />
-  <h1 className="text-xl font-bold text-BLUE-600">STUMATE</h1>
+  <h1 className="text-xl font-bold text-BLUE-600">PEERCHAT</h1>
 </header>
 }
 </div>
