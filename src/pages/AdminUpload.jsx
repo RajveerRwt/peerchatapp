@@ -1,60 +1,175 @@
 import { useState } from "react";
-import { supabase } from "../supabaseClient";
+import { supabase } from "../supabaseClient"; // your supabase client
 
 export default function AdminUpload() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [branch, setBranch] = useState("");
-  const [type, setType] = useState("");
+  const [formData, setFormData] = useState({
+    branch: "",
+    semester: "",
+    subject: "",
+    material_type: "",
+    title: "",
+    description: "",
+  });
   const [file, setFile] = useState(null);
-  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleUpload = async (e) => {
-    e.preventDefault();
-    if (!file) return setMessage("Please choose a file");
+  const branches = ["CS", "IT", "CIVIL", "MECHANICAL", "ELECTRICAL", "ECE"];
+  const materialTypes = ["PYQ", "Notes", "Books"];
 
-    const fileName = `${Date.now()}-${file.name}`;
-    const { data, error: uploadError } = await supabase.storage
-      .from("study-material")
-      .upload(`materials/${branch}/${fileName}`, file);
+  const handleChange = (e) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
-    if (uploadError) {
-      setMessage("Upload failed: " + uploadError.message);
+  const handleUpload = async () => {
+    if (!file) {
+      alert("Please select a file");
       return;
     }
 
-    const fileUrl = supabase.storage
-      .from("study-material")
-      .getPublicUrl(`materials/${branch}/${fileName}`).data.publicUrl;
+    setLoading(true);
 
-    const { error: dbError } = await supabase.from("materials").insert([
-      { title, description, type, branch, file_url: fileUrl },
-    ]);
+    try {
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${Date.now()}_${file.name}`;
+      const filePath = `${fileName}`;
 
-    if (dbError) {
-      setMessage("Database error: " + dbError.message);
-    } else {
-      setMessage("Uploaded successfully!");
-      setTitle("");
-      setDescription("");
-      setBranch("");
-      setType("");
+      // Upload file to bucket
+      const { error: uploadError } = await supabase.storage
+        .from("study-material")
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      // Insert into database
+      const { error: dbError } = await supabase.from("study_material").insert([
+        {
+          branch: formData.branch,
+          semester: parseInt(formData.semester),
+          subject: formData.subject,
+          material_type: formData.material_type,
+          title: formData.title,
+          description: formData.description || null,
+          file_path: filePath,
+          uploaded_by: "Admin", // replace with actual admin name if needed
+        },
+      ]);
+
+      if (dbError) throw dbError;
+
+      alert("Material uploaded successfully 🚀");
+      setFormData({
+        branch: "",
+        semester: "",
+        subject: "",
+        material_type: "",
+        title: "",
+        description: "",
+      });
       setFile(null);
+    } catch (err) {
+      console.error("Error uploading material:", err);
+      alert(`Upload failed: ${err.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="p-4 max-w-lg mx-auto bg-white shadow rounded">
-      <h2 className="text-xl font-semibold mb-4">Admin Upload</h2>
-      <form onSubmit={handleUpload}>
-        <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required className="input" />
-        <input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" required className="input" />
-        <input value={branch} onChange={(e) => setBranch(e.target.value)} placeholder="Branch (e.g., CSE)" required className="input" />
-        <input value={type} onChange={(e) => setType(e.target.value)} placeholder="Type (Notes/PYQ/etc)" required className="input" />
-        <input type="file" onChange={(e) => setFile(e.target.files[0])} required className="input" />
-        <button type="submit" className="btn">Upload</button>
-      </form>
-      <p className="mt-2 text-sm text-green-600">{message}</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 to-indigo-800 p-6">
+      <div className="bg-white rounded-xl shadow-2xl p-8 max-w-lg w-full space-y-6">
+        <h2 className="text-3xl font-extrabold text-gray-900 text-center">
+          📚 Upload Study Material
+        </h2>
+
+        {/* Branch */}
+        <select
+          name="branch"
+          value={formData.branch}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+        >
+          <option value="">Select Branch</option>
+          {branches.map((b) => (
+            <option key={b} value={b}>
+              {b}
+            </option>
+          ))}
+        </select>
+
+        {/* Semester */}
+        <select
+          name="semester"
+          value={formData.semester}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+        >
+          <option value="">Select Semester</option>
+          {[...Array(8)].map((_, i) => (
+            <option key={i + 1} value={i + 1}>
+              Semester {i + 1}
+            </option>
+          ))}
+        </select>
+
+        {/* Subject */}
+        <input
+          type="text"
+          name="subject"
+          placeholder="Subject"
+          value={formData.subject}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+        />
+
+        {/* Material Type */}
+        <select
+          name="material_type"
+          value={formData.material_type}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+        >
+          <option value="">Select Material Type</option>
+          {materialTypes.map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
+        </select>
+
+        {/* Title */}
+        <input
+          type="text"
+          name="title"
+          placeholder="Material Title"
+          value={formData.title}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+        />
+
+        {/* Description */}
+        <textarea
+          name="description"
+          placeholder="Description (optional)"
+          value={formData.description}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+        />
+
+        {/* File Upload */}
+        <input
+          type="file"
+          onChange={(e) => setFile(e.target.files[0])}
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+        />
+
+        <button
+          onClick={handleUpload}
+          disabled={loading}
+          className="w-full py-3 bg-indigo-600 text-white rounded-lg font-bold hover:bg-indigo-700 transition disabled:opacity-50"
+        >
+          {loading ? "Uploading..." : "🚀 Upload"}
+        </button>
+      </div>
     </div>
   );
 }

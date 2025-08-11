@@ -1,57 +1,153 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
 
+const branches = ["CS","IT", "CIVIL", "MECHANICAL", "ELECTRICAL", "ECE"];
+const semesters = Array.from({ length: 8 }, (_, i) => i + 1);
+const materialTypes = ["PYQ", "Notes", "Books"];
+
 export default function MaterialsList() {
+  const [branch, setBranch] = useState(localStorage.getItem("selectedBranch") || "");
+  const [semester, setSemester] = useState("");
+  const [type, setType] = useState("");
   const [materials, setMaterials] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
 
   const fetchMaterials = async () => {
-    const { data, error } = await supabase
-      .from("materials")
-      .select("*")
-      .order("created_at", { ascending: false });
+    setLoading(true);
 
-    if (error) {
-      console.error("Error fetching materials:", error.message);
+    let query = supabase.from("study_material").select("*").order("uploaded_at", { ascending: false });
+
+    if (branch) query = query.eq("branch", branch);
+    if (semester) query = query.eq("semester", semester);
+    if (type) query = query.eq("material_type", type);
+
+    const { data, error } = await query;
+
+    if (!error) {
+      setMaterials(data || []);
     } else {
-      setMaterials(data);
+      console.error("Error fetching:", error.message);
     }
 
     setLoading(false);
   };
 
   useEffect(() => {
+    if (branch) localStorage.setItem("selectedBranch", branch);
     fetchMaterials();
-  }, []);
+  }, [branch, semester, type]);
+
+  const filteredMaterials = materials.filter((m) =>
+    m.title?.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div className="p-4 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4  text-blue-600">📚 Study Materials</h1>
-      {loading ? (
-        <p>Loading...</p>
-      ) : materials.length === 0 ? (
-        <p>No materials found.</p>
-      ) : (
-        <div className="space-y-4">
-          {materials.map((item) => (
-            <div key={item.id} className="bg-white shadow p-4 rounded border">
-              <h2 className="text-lg font-semibold">{item.title}</h2>
-              <p className="text-sm text-gray-600 mb-1">{item.description}</p>
-              <p className="text-xs text-gray-500">
-                Branch: <b>{item.branch}</b> | Type: <b>{item.type}</b>
-              </p>
-              <a
-                href={item.file_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 inline-block text-blue-600 underline"
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-pink-50 to-purple-50 p-6">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-4xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 drop-shadow-sm">
+          📚 Explore Study Materials
+        </h1>
+
+        {/* Filters */}
+        <div className="flex flex-wrap gap-3 justify-center mb-8 bg-white/70 backdrop-blur-md p-4 rounded-xl shadow-md">
+          <select
+            value={branch}
+            onChange={(e) => setBranch(e.target.value)}
+            className="px-4 py-2 rounded-lg border focus:ring-2 focus:ring-pink-400"
+          >
+            <option value="">All Branches</option>
+            {branches.map((b) => (
+              <option key={b} value={b}>
+                {b}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={semester}
+            onChange={(e) => setSemester(Number(e.target.value))}
+            className="px-4 py-2 rounded-lg border focus:ring-2 focus:ring-pink-400"
+          >
+            <option value="">All Semesters</option>
+            {semesters.map((s) => (
+              <option key={s} value={s}>
+                Semester {s}
+              </option>
+            ))}
+          </select>
+
+          <div className="flex gap-2">
+            {materialTypes.map((t) => (
+              <button
+                key={t}
+                onClick={() => setType(type === t ? "" : t)}
+                className={`px-4 py-2 rounded-full border transition-all duration-300 ${
+                  type === t
+                    ? "bg-gradient-to-r from-pink-500 to-purple-500 text-white border-pink-500 shadow-lg"
+                    : "bg-white hover:bg-pink-50 border-gray-300"
+                }`}
               >
-                Download
-              </a>
-            </div>
-          ))}
+                {t}
+              </button>
+            ))}
+          </div>
+
+          <input
+            type="text"
+            placeholder="🔍 Search by title..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="px-4 py-2 rounded-lg border flex-1 min-w-[200px] focus:ring-2 focus:ring-pink-400"
+          />
         </div>
-      )}
+
+        {/* Materials */}
+        {loading ? (
+          <p className="text-center text-lg animate-pulse">Loading materials...</p>
+        ) : filteredMaterials.length === 0 ? (
+          <p className="text-center text-gray-500">No materials found 😔</p>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredMaterials.map((item) => (
+              <div
+                key={item.id}
+                className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-5 hover:shadow-2xl transition group border border-pink-100"
+              >
+                {/* Subject Tag */}
+                <span className="inline-block px-3 py-1 text-xs font-medium rounded-full bg-gradient-to-r from-pink-400 to-purple-400 text-white mb-3 shadow-sm">
+                  {item.subject}
+                </span>
+
+                {/* Title */}
+                <h2 className="text-lg font-semibold mb-2 group-hover:text-pink-500">
+                  {item.title}
+                </h2>
+
+                {/* Description */}
+                <p className="text-gray-600 text-sm line-clamp-2">{item.description}</p>
+
+                {/* Meta Info */}
+                <p className="text-xs text-gray-500 mt-3">
+                  📍 {item.branch} | 🎓 Sem {item.semester} | 📂 {item.material_type}
+                </p>
+
+                {/* Download */}
+                <a
+                  href={`${supabase.storage
+                    .from("study-material")
+                    .getPublicUrl(item.file_path).data.publicUrl}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-block w-full text-center bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg hover:from-pink-600 hover:to-purple-600 transition font-medium shadow-md"
+                >
+                   Download
+                </a>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -29,49 +29,60 @@ export default function ConfessionFeed() {
 
   return (
     <div className="p-4 max-w-2xl mx-auto space-y-6">
-      <h2 className="text-2xl font-bold text-center text-pink-700 mb-4">
-        🎭 Memes/Anonymous Confessions/notices
+      <h2 className="text-3xl font-extrabold text-center bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent drop-shadow-sm mb-6">
+        🎭 Campus Buzz
       </h2>
 
       {loading ? (
-        <p className="text-center text-gray-500">Loading confessions...</p>
+        <p className="text-center text-gray-400 animate-pulse">
+          Loading the latest vibes...
+        </p>
       ) : confessions.length === 0 ? (
-        <p className="text-center text-gray-400">No confessions yet.</p>
+        <p className="text-center text-gray-400">
+          No posts yet. Be the first to share something!
+        </p>
       ) : (
         confessions.map((post) => (
           <div
             key={post.id}
-            className="bg-white rounded-lg shadow-sm border border-gray-200 p-4"
+            className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-800 overflow-hidden"
           >
-            {/* User Info */}
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm">
-                🧑
+            {/* Header */}
+            <div className="flex items-center gap-3 p-4">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center text-white font-bold">
+                {post.username?.[0]?.toUpperCase() || "A"}
               </div>
-              <div className="text-sm font-medium text-gray-800">
-                @{post.username || "Anonymous"}
-              </div>
-              <div className="text-xs text-gray-400 ml-auto">
-                {new Date(post.created_at).toLocaleString()}
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+                  @{post.username || "Anonymous"}
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  {new Date(post.created_at).toLocaleString()}
+                </span>
               </div>
             </div>
 
-            {/* Text */}
-            <p className="text-gray-800 whitespace-pre-wrap">{post.text}</p>
+            {/* Content */}
+            <div className="px-4 pb-4">
+              <p className="text-gray-800 dark:text-gray-200 text-base whitespace-pre-wrap leading-relaxed">
+                {post.text}
+              </p>
 
-            {/* Optional image */}
-            {post.image_url && (
-              <img
-                src={post.image_url}
-                alt="Attachment"
-                className="w-full mt-3 rounded-md object-cover max-h-96"
-              />
-            )}
+              {post.image_url && (
+                <div className="mt-3">
+                  <img
+                    src={post.image_url}
+                    alt="Post"
+                    className="w-full rounded-xl object-cover max-h-[400px] shadow-sm hover:scale-[1.01] transition-transform duration-200"
+                  />
+                </div>
+              )}
 
-            {/* Like and Comment Section */}
-            <div className="mt-3 flex flex-col gap-2">
-              <LikeButton confessionId={post.id} />
-              <CommentSection confessionId={post.id} />
+              {/* Actions */}
+              <div className="mt-4 flex flex-col gap-3 border-t pt-3 border-gray-100 dark:border-gray-800">
+                <LikeButton confessionId={post.id} />
+                <CommentSection confessionId={post.id} />
+              </div>
             </div>
           </div>
         ))
