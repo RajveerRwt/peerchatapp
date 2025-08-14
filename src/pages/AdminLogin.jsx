@@ -14,41 +14,47 @@ export default function AdminLogin({ onLogin }) {
     });
 
     if (error) {
-      setMessage("Login failed: " + error.message);
+      setMessage("❌ " + error.message);
     } else {
       setMessage("✅ Logged in successfully!");
-      onLogin(); // Tell App to go to admin panel
+      onLogin();
     }
   };
 
   return (
-    <div className="max-w-sm mx-auto p-4 bg-pink-200 shadow rounded mt-10">
-      <h2 className="text-lg font-semibold mb-4 text-center">🔐 Admin Login</h2>
-      <form onSubmit={handleLogin} className="flex flex-col gap-3">
-        <input
-          type="email"
-          className="border p-2 rounded"
-          placeholder="admin@peerchat.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          className="border p-2 rounded"
-          placeholder="Your Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button
-          type="submit"
-          className="bg-pink-700 text-pink-700 px-4 py-2 rounded hover:bg-pink-800"
-        >
-          Login
-        </button>
-      </form>
-      <p className="text-red-600 mt-2 text-center">{message}</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-black to-black text-white px-4">
+      <div className="w-full max-w-sm p-6 rounded-2xl backdrop-blur-lg bg-white/5 border border-white/10 shadow-xl">
+        <h2 className="text-2xl font-bold mb-6 text-center tracking-wide">
+          🔐 Admin Login
+        </h2>
+        <form onSubmit={handleLogin} className="flex flex-col gap-4">
+          <input
+            type="email"
+            className="p-3 rounded-xl bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-400"
+            placeholder="admin@peerchat.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            className="p-3 rounded-xl bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-400"
+            placeholder="Your Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button
+            type="submit"
+            className="bg-purple-600 hover:bg-purple-700 text-black font-semibold py-3 rounded-xl transition-transform transform hover:scale-105 active:scale-95 shadow-lg"
+          >
+            Login
+          </button>
+        </form>
+        {message && (
+          <p className="mt-4 text-center text-sm text-gray-300">{message}</p>
+        )}
+      </div>
     </div>
   );
 }

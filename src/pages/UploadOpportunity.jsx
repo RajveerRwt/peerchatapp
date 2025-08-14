@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 export default function UploadOpportunity() {
   const [user, setUser] = useState(null);
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(""); // HTML output from Quill
   const [link, setLink] = useState("");
   const [image, setImage] = useState(null);
   const [message, setMessage] = useState("");
@@ -50,7 +52,7 @@ export default function UploadOpportunity() {
     const { error } = await supabase.from("opportunities").insert([
       {
         title,
-        description,
+        description, // HTML from React Quill
         file_url: link,
         image_url: imageUrl,
         posted_by: user.email,
@@ -78,43 +80,58 @@ export default function UploadOpportunity() {
   }
 
   return (
-    <div className="max-w-lg mx-auto mt-8 bg-pink-200 shadow rounded p-5">
-      <h2 className="text-xl font-bold text-center mb-4 text-indigo-800">📤 Upload Opportunity</h2>
-      <form onSubmit={handleSubmit} className="space-y-3">
+    <div className="max-w-lg mx-auto mt-8 bg-white shadow-lg rounded-xl p-5">
+      <h2 className="text-2xl font-bold text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-pink-500">
+        📤 Upload Opportunity
+      </h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full border p-2 rounded"
+          className="w-full border p-2 rounded focus:ring-2 focus:ring-indigo-400 outline-none"
           required
         />
-        <textarea
-          placeholder="Description"
+
+        {/* Rich Text Editor */}
+        <ReactQuill
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full border p-2 rounded"
-          rows={4}
-          required
+          onChange={setDescription}
+          theme="snow"
+          placeholder="Write your description here with full formatting..."
+          className="bg-white rounded-lg"
+          modules={{
+            toolbar: [
+              [{ header: [1, 2, 3, false] }],
+              ["bold", "italic", "underline", "strike"],
+              [{ color: [] }, { background: [] }],
+              [{ list: "ordered" }, { list: "bullet" }],
+              ["link", "blockquote", "code-block"],
+              ["clean"],
+            ],
+          }}
         />
+
         <input
           type="url"
           placeholder="External Link (optional)"
           value={link}
           onChange={(e) => setLink(e.target.value)}
-          className="w-full border p-2 rounded"
+          className="w-full border p-2 rounded focus:ring-2 focus:ring-indigo-400 outline-none"
         />
+
         <input
           type="file"
           accept="image/*"
           onChange={(e) => setImage(e.target.files[0])}
-          className="w-full border p-2 rounded"
+          className="w-full border p-2 rounded focus:ring-2 focus:ring-indigo-400 outline-none"
         />
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-indigo-600 text-pink-700 py-2 rounded hover:bg-indigo-700"
+          className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white py-2 rounded-lg font-semibold hover:scale-105 transform transition-all"
         >
           {loading ? "Uploading..." : "Upload Opportunity"}
         </button>

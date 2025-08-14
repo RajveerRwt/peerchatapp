@@ -28,7 +28,6 @@ export default function CommentSection({ confessionId }) {
       .order("created_at", { ascending: true });
 
     if (error) {
-      console.error("Error fetching comments:", error);
       setError("Failed to load comments.");
     } else {
       setComments(data || []);
@@ -48,7 +47,6 @@ export default function CommentSection({ confessionId }) {
     ]);
 
     if (error) {
-      console.error("Error submitting comment:", error);
       setError("Failed to post comment.");
       return;
     }
@@ -58,29 +56,30 @@ export default function CommentSection({ confessionId }) {
   };
 
   return (
-    <div className="mt-3 space-y-2">
+    <div className="mt-3">
       {/* Toggle comment visibility */}
       <button
         onClick={() => setVisible(!visible)}
-        className="text-sm text-pink-600 hover:underline"
+        className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 transition-all"
       >
-        💬 {comments.length} Comment{comments.length !== 1 ? "s" : ""}
+        💬 <span>{comments.length} {comments.length !== 1 ? "Comments" : "Comment"}</span>
       </button>
 
-      {/* Comment Box + Comments List */}
+      {/* Comment Drawer */}
       {visible && (
-        <>
-          <form onSubmit={handleSubmit} className="flex gap-2 mt-2">
+        <div className="mt-3 space-y-3 bg-gray-50 dark:bg-gray-800 p-4 rounded-xl shadow-inner">
+          {/* Comment Input */}
+          <form onSubmit={handleSubmit} className="flex gap-2">
             <input
               type="text"
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="Write a comment..."
-              className="flex-1 border px-3 py-1 rounded text-sm"
+              placeholder="Write something..."
+              className="flex-1 px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
             />
             <button
               type="submit"
-              className="text-sm px-3 py-1 bg-pink-600 text-white rounded"
+              className="px-4 py-2 bg-blue-500 text-pink-600 rounded-lg hover:bg-blue-600 transition"
             >
               Post
             </button>
@@ -88,16 +87,19 @@ export default function CommentSection({ confessionId }) {
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
-          {comments.map((comment) => (
-            <div
-              key={comment.id}
-              className="text-sm text-gray-800 bg-gray-100 rounded p-2"
-            >
-              <span className="font-semibold">@{comment.username || "Anon"}:</span>{" "}
-              {comment.text}
-            </div>
-          ))}
-        </>
+          {/* Comment List */}
+          <div className="space-y-2 max-h-48 overflow-y-auto">
+            {comments.map((comment) => (
+              <div
+                key={comment.id}
+                className="bg-white dark:bg-gray-700 p-2 rounded-lg text-sm shadow-sm"
+              >
+                <span className="font-semibold">@{comment.username || "Anon"}:</span>{" "}
+                {comment.text}
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );
