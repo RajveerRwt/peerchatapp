@@ -84,7 +84,7 @@ export default function App() {
       <div className="max-w-screen-lg mx-auto">
         {/* HEADER */}
         <header
-          className={`p-4 flex items-center justify-between rounded-b-2xl shadow-lg backdrop-blur-md ${
+          className={`p-4 flex items-center justify-between  shadow-lg backdrop-blur-md ${
             darkMode
               ? "bg-gradient-to-r from-[#1a1a1d] to-[#0e0e10]"
               : "bg-gradient-to-r from-pink-500 via-fuchsia-500 to-purple-500 text-white"

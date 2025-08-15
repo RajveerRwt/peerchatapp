@@ -67,7 +67,7 @@ export default function CommentSection({ confessionId }) {
 
       {/* Comment Drawer */}
       {visible && (
-        <div className="mt-3 space-y-3 bg-gray-50 dark:bg-gray-800 p-4 rounded-xl shadow-inner">
+        <div className="mt-3 space-y-3 bg-gray-50 dark:bg-gray-800 p-4 rounded-xl shadow-inner text-blue-600">
           {/* Comment Input */}
           <form onSubmit={handleSubmit} className="flex gap-2">
             <input
@@ -92,7 +92,7 @@ export default function CommentSection({ confessionId }) {
             {comments.map((comment) => (
               <div
                 key={comment.id}
-                className="bg-white dark:bg-gray-700 p-2 rounded-lg text-sm shadow-sm"
+                className="bg-pink dark:bg-pink-700 p-2 rounded-lg text-sm shadow-sm text-pink-900"
               >
                 <span className="font-semibold">@{comment.username || "Anon"}:</span>{" "}
                 {comment.text}

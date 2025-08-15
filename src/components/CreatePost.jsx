@@ -60,7 +60,7 @@ export default function CreatePost({ onPostCreated }) {
       className="bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 p-6 rounded-2xl shadow-xl mb-6 max-w-2xl mx-auto border border-white/40 backdrop-blur-lg"
     >
       <textarea
-        placeholder="✨ Share your confession or drop a spicy meme..."
+        placeholder="✨ Post confessions/thoughts or memes..."
         value={text}
         onChange={(e) => setText(e.target.value)}
         className="w-full bg-white/70 border border-gray-300 p-3 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder-gray-500"
